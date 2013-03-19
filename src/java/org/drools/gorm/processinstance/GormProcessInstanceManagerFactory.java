@@ -6,8 +6,7 @@ import org.jbpm.process.instance.ProcessInstanceManagerFactory;
 
 public class GormProcessInstanceManagerFactory implements ProcessInstanceManagerFactory {
 
-	public ProcessInstanceManager createProcessInstanceManager(InternalKnowledgeRuntime kruntime) {
-		return new GormProcessInstanceManager(kruntime);
-	}
-
+    public ProcessInstanceManager createProcessInstanceManager(InternalKnowledgeRuntime kruntime) {
+        return new GormProcessInstanceManager(kruntime);
+    }
 }

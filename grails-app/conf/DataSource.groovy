@@ -10,9 +10,28 @@ environments {
             dialect = "org.hibernate.dialect.H2Dialect"
             username = "sa"
             password = ""
-            dbCreate = "create"
-            url = "jdbc:h2:mem"
+            dbCreate = "create-drop"
+            url = "jdbc:h2:mem:devDb;MVCC=TRUE"
+
+        }
+    }
+    development {
+        dataSource {         
+            loggingSql = true
+            formatSql = true
+            driverClassName = "org.h2.Driver"
+            dialect = "org.hibernate.dialect.H2Dialect"
+            username = "sa"
+            password = ""
+            dbCreate = "create-drop"
+            url = "jdbc:h2:mem:devDb;MVCC=TRUE"
 
         }
     }
 }
+
+/*
+ *
+DELETE from DROOLS_TEST WHERE 1;
+DELETE from SESSION_INFO WHERE 1;
+ */

@@ -3,11 +3,12 @@ package org.drools.gorm.session
 import org.drools.gorm.session.marshalling.GormSessionMarshallingHelper
 import org.drools.gorm.DomainUtils
 import org.drools.gorm.GrailsIntegration
-import org.drools.runtime.Environment;
+import org.drools.runtime.Environment
+import org.drools.gorm.session.HasBlob
 
-import java.io.OutputStream;
+import java.io.OutputStream
 import java.sql.Blob
-import java.util.Set;
+import java.util.Set
 
 import org.hibernate.Hibernate
 
@@ -57,12 +58,12 @@ class SessionInfoDomain implements SessionInfo {
     
     def beforeInsert() {
         this.lastModificationDate = new Date()
-        Set updates = env.get(GORM_UPDATE_SET);
+        Set updates = env.get(HasBlob.GORM_UPDATE_SET);
         updates.add(this)
     }
     
     def beforeUpdate() {
-        Set updates = env.get(GORM_UPDATE_SET);
+        Set updates = env.get(HasBlob.GORM_UPDATE_SET);
         updates.add(this)
     }
     

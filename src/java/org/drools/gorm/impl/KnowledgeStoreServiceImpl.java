@@ -2,6 +2,7 @@ package org.drools.gorm.impl;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
 import java.util.Properties;
 
 import org.drools.KnowledgeBase;
@@ -25,44 +26,42 @@ import org.drools.time.TimerService;
 
 // => drools-persistence-jpa->
 //    org.drools.persistence.jpa.impl.KnowledgeStoreServiceImpl
-public class KnowledgeStoreServiceImpl 
-    implements
-    KnowledgeStoreService {
+public class KnowledgeStoreServiceImpl
+        implements
+        KnowledgeStoreService {
 
 //    private static final Logger log = LoggerFactory.getLogger(KnowledgeStoreServiceImpl.class);
-    
-    private Class<? extends CommandExecutor>               commandServiceClass;
-    private Class<? extends WorkItemManagerFactory>        workItemManagerFactoryClass;
-    private Class<? extends TimerService>                  timerServiceClass;
-
-    private Properties                                     configProps = new Properties();
+    private Class<? extends CommandExecutor> commandServiceClass;
+    private Class<? extends WorkItemManagerFactory> workItemManagerFactoryClass;
+    private Class<? extends TimerService> timerServiceClass;
+    private Properties configProps = new Properties();
 
     public KnowledgeStoreServiceImpl() {
         setDefaultImplementations();
     }
 
     protected void setDefaultImplementations() {
-        setCommandServiceClass( SingleSessionCommandService.class );
-        setProcessInstanceManagerFactoryClass( GormProcessInstanceManagerFactory.class );
-        setWorkItemManagerFactoryClass( GormWorkItemManagerFactory.class );
-        setProcessSignalManagerFactoryClass( GormSignalManagerFactory.class );
-        setTimerServiceClass( JpaJDKTimerService.class );
+        setCommandServiceClass(SingleSessionCommandService.class);
+        setProcessInstanceManagerFactoryClass(GormProcessInstanceManagerFactory.class);
+        setWorkItemManagerFactoryClass(GormWorkItemManagerFactory.class);
+        setProcessSignalManagerFactoryClass(GormSignalManagerFactory.class);
+        setTimerServiceClass(JpaJDKTimerService.class);
     }
 
     public StatefulKnowledgeSession newStatefulKnowledgeSession(KnowledgeBase kbase,
-                                                                KnowledgeSessionConfiguration configuration,
-                                                                Environment environment) {
-        if ( configuration == null ) {
+            KnowledgeSessionConfiguration configuration,
+            Environment environment) {
+        if (configuration == null) {
             configuration = new SessionConfiguration();
         }
 
-        if ( environment == null ) {
-            throw new IllegalArgumentException( "Environment cannot be null" );
+        if (environment == null) {
+            throw new IllegalArgumentException("Environment cannot be null");
         }
 
-        return new CommandBasedStatefulKnowledgeSession( (CommandService) buildCommanService( kbase,
-                                                                             mergeConfig( configuration ),
-                                                                             environment ) );
+        return new CommandBasedStatefulKnowledgeSession((CommandService) buildCommanService(kbase,
+                mergeConfig(configuration),
+                environment));
     }
 
     public StatefulKnowledgeSession loadStatefulKnowledgeSession(int id, KnowledgeBase kbase,
@@ -76,86 +75,93 @@ public class KnowledgeStoreServiceImpl
         }
 
         return new CommandBasedStatefulKnowledgeSession((CommandService) buildCommanService(id,
-                kbase, 
-                mergeConfig(configuration), 
+                kbase,
+                mergeConfig(configuration),
                 environment));
     }
 
     private CommandExecutor buildCommanService(int sessionId,
-                                              KnowledgeBase kbase,
-                                              KnowledgeSessionConfiguration conf,
-                                              Environment env) {
+            KnowledgeBase kbase,
+            KnowledgeSessionConfiguration conf,
+            Environment env) {
 
         try {
             Class< ? extends CommandExecutor> serviceClass = getCommandServiceClass();
-            Constructor< ? extends CommandExecutor> constructor = serviceClass.getConstructor( int.class,
-                                                                                              KnowledgeBase.class,
-                                                                                              KnowledgeSessionConfiguration.class,
-                                                                                              Environment.class );
-            return constructor.newInstance( sessionId,
-                                            kbase,
-                                            conf,
-                                            env );
-        } catch ( SecurityException e ) {
-            throw new IllegalStateException( e );
-        } catch ( NoSuchMethodException e ) {
-            throw new IllegalStateException( e );
-        } catch ( IllegalArgumentException e ) {
-            throw new IllegalStateException( e );
-        } catch ( InstantiationException e ) {
-            throw new IllegalStateException( e );
-        } catch ( IllegalAccessException e ) {
-            throw new IllegalStateException( e );
-        } catch ( InvocationTargetException e ) {
-            throw new IllegalStateException( e );
+            Constructor< ? extends CommandExecutor> constructor = serviceClass.getConstructor(int.class,
+                    KnowledgeBase.class,
+                    KnowledgeSessionConfiguration.class,
+                    Environment.class);
+            return constructor.newInstance(sessionId,
+                    kbase,
+                    conf,
+                    env);
+        } catch (SecurityException e) {
+            throw new IllegalStateException(e);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (InstantiationException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException(e);
         }
     }
 
     private CommandExecutor buildCommanService(KnowledgeBase kbase,
-                                              KnowledgeSessionConfiguration conf,
-                                              Environment env) {
+            KnowledgeSessionConfiguration conf,
+            Environment env) {
 
         Class< ? extends CommandExecutor> serviceClass = getCommandServiceClass();
         try {
-            Constructor< ? extends CommandExecutor> constructor = serviceClass.getConstructor( KnowledgeBase.class,
-                                                                                              KnowledgeSessionConfiguration.class,
-                                                                                              Environment.class );
-            return constructor.newInstance( kbase,
-                                            conf,
-                                            env );
-        } catch ( SecurityException e ) {
-            throw new IllegalStateException( e );
-        } catch ( NoSuchMethodException e ) {
-            throw new IllegalStateException( e );
-        } catch ( IllegalArgumentException e ) {
-            throw new IllegalStateException( e );
-        } catch ( InstantiationException e ) {
-            throw new IllegalStateException( e );
-        } catch ( IllegalAccessException e ) {
-            throw new IllegalStateException( e );
-        } catch ( InvocationTargetException e ) {
-            throw new IllegalStateException( e );
+            Constructor< ? extends CommandExecutor> constructor = serviceClass.getConstructor(KnowledgeBase.class,
+                    KnowledgeSessionConfiguration.class,
+                    Environment.class);
+            return constructor.newInstance(kbase,
+                    conf,
+                    env);
+        } catch (SecurityException e) {
+            throw new IllegalStateException(e);
+        } catch (NoSuchMethodException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalStateException(e);
+        } catch (InstantiationException e) {
+            throw new IllegalStateException(e);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException(e);
+        } catch (InvocationTargetException e) {
+            throw new IllegalStateException(e);
         }
     }
 
     private KnowledgeSessionConfiguration mergeConfig(KnowledgeSessionConfiguration configuration) {
-        ((SessionConfiguration) configuration).addProperties( configProps );
+
+        Enumeration e = configProps.propertyNames();
+
+        while (e.hasMoreElements()) {
+            String key = (String) e.nextElement();            
+            ((SessionConfiguration) configuration).setProperty(key, configProps.getProperty(key));
+        }
+        
         return configuration;
     }
 
     public int getStatefulKnowledgeSessionId(StatefulKnowledgeSession ksession) {
-        if ( ksession instanceof CommandBasedStatefulKnowledgeSession ) {
+        if (ksession instanceof CommandBasedStatefulKnowledgeSession) {
             SingleSessionCommandService commandService = (SingleSessionCommandService) ((CommandBasedStatefulKnowledgeSession) ksession).getCommandService();
             return commandService.getSessionId();
         }
-        throw new IllegalArgumentException( "StatefulKnowledgeSession must be an a CommandBasedStatefulKnowledgeSession" );
+        throw new IllegalArgumentException("StatefulKnowledgeSession must be an a CommandBasedStatefulKnowledgeSession");
     }
 
     public void setCommandServiceClass(Class< ? extends CommandExecutor> commandServiceClass) {
-        if ( commandServiceClass != null ) {
+        if (commandServiceClass != null) {
             this.commandServiceClass = commandServiceClass;
-            configProps.put( "drools.commandService",
-                             commandServiceClass.getName() );
+            configProps.put("drools.commandService",
+                    commandServiceClass.getName());
         }
     }
 
@@ -164,10 +170,10 @@ public class KnowledgeStoreServiceImpl
     }
 
     public void setTimerServiceClass(Class< ? extends TimerService> timerServiceClass) {
-        if ( timerServiceClass != null ) {
+        if (timerServiceClass != null) {
             this.timerServiceClass = timerServiceClass;
-            configProps.put( "drools.timerService",
-            		         timerServiceClass.getName() );
+            configProps.put("drools.timerService",
+                    timerServiceClass.getName());
         }
     }
 
@@ -175,17 +181,16 @@ public class KnowledgeStoreServiceImpl
         return timerServiceClass;
     }
 
-    public void setProcessInstanceManagerFactoryClass(Class<? extends ProcessInstanceManagerFactory> 
-    		processInstanceManagerFactoryClass) {
-        configProps.put( "drools.processInstanceManagerFactory",
-                         processInstanceManagerFactoryClass.getName() );
+    public void setProcessInstanceManagerFactoryClass(Class<? extends ProcessInstanceManagerFactory> processInstanceManagerFactoryClass) {
+        configProps.put("drools.processInstanceManagerFactory",
+                processInstanceManagerFactoryClass.getName());
     }
 
     public void setWorkItemManagerFactoryClass(Class< ? extends WorkItemManagerFactory> clazz) {
-        if ( clazz != null ) {
+        if (clazz != null) {
             this.workItemManagerFactoryClass = clazz;
-            configProps.put( "drools.workItemManagerFactory",
-                             clazz.getName() );
+            configProps.put("drools.workItemManagerFactory",
+                    clazz.getName());
         }
     }
 
@@ -194,7 +199,7 @@ public class KnowledgeStoreServiceImpl
     }
 
     public void setProcessSignalManagerFactoryClass(Class<? extends SignalManagerFactory> clazz) {
-        configProps.put( "drools.processSignalManagerFactory",
-                         clazz.getName() );
+        configProps.put("drools.processSignalManagerFactory",
+                clazz.getName());
     }
 }

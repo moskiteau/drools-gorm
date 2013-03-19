@@ -28,7 +28,7 @@ public class DefaultGormManager
     }
 
     public void dispose() {
-       
+       System.out.println("GormMarshaller: dispose!");
     }
 
 }

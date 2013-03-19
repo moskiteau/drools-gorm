@@ -22,6 +22,7 @@ grails.project.dependency.resolution = {
         //mavenRepo "http://repository.codehaus.org"
         //mavenRepo "http://download.java.net/maven/2/"
         mavenRepo "http://repository.jboss.org/nexus/content/groups/public/"
+        //
         //mavenRepo "https://repository.jboss.org/nexus/content/repositories/public-jboss/"
         mavenRepo "http://people.apache.org/repo/m2-snapshot-repository/"
         //mavenRepo "http://people.apache.org/repo/m2-snapshot-repository/"
@@ -29,25 +30,34 @@ grails.project.dependency.resolution = {
     dependencies {
         // specify dependencies here under either 'build', 'compile', 'runtime', 'test' or 'provided' scopes eg.
         
-        runtime 'org.jbpm:jbpm-bpmn2:5.2.0.Final'
-        runtime ('org.drools:drools-persistence-jpa:5.3.1.Final') {
-            transitive = false
-        }
-        runtime ('org.drools:drools-core:5.3.1.Final') {
-            transitive = false
-        }
-        runtime 'org.jbpm:jbpm-flow:5.2.0.Final'
-        runtime ('org.jbpm:jbpm-persistence-jpa:5.2.0.Final') {
-            transitive = false
-        }
+        runtime 'org.jbpm:jbpm-bpmn2:5.4.0.Final'                        
+        runtime ('org.drools:drools-persistence-jpa:5.5.0.Final')
+        runtime ('org.drools:drools-core:5.5.0.Final')        
+        runtime ('org.jbpm:jbpm-flow:5.4.0.Final')
+        runtime ('org.jbpm:jbpm-persistence-jpa:5.4.0.Final')
+        runtime ('org.drools:knowledge-internal-api:5.5.0.Final')
+        runtime ('org.drools:knowledge-api:5.5.0.Final')        
+        runtime ('org.drools:drools-compiler:5.5.0.Final')
         
+//        
+//        runtime ('org.drools:droolsjbpm-knowledge:5.5.0.Final') {
+//            transitive = false
+//        }
+//      
+          
+        runtime 'org.mvel:mvel2:2.1.3.Final'
         runtime 'com.sun.xml.bind:jaxb-xjc:2.2.4'
         runtime 'com.sun.xml.bind:jaxb-impl:2.2.4'
         runtime 'javax.xml.stream:stax-api:1.0-2'
         
         runtime 'janino:janino:2.5.15'
 
-        test 'com.h2database:h2:1.2.139'
+        if (Environment.current == Environment.DEVELOPMENT) {
+            runtime 'com.h2database:h2:1.2.139'
+        } else {
+            test 'com.h2database:h2:1.2.139'
+        }
+        
     }
 }
 

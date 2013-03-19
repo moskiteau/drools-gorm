@@ -7,6 +7,7 @@ import java.sql.Blob;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.drools.gorm.session.HasBlob
 import org.drools.common.InternalKnowledgeRuntime;
 import org.drools.common.InternalRuleBase;
 import org.drools.gorm.DomainUtils;
@@ -14,6 +15,7 @@ import org.drools.impl.InternalKnowledgeBase;
 import org.drools.impl.StatefulKnowledgeSessionImpl;
 import org.drools.marshalling.impl.MarshallerReaderContext;
 import org.drools.marshalling.impl.MarshallerWriteContext;
+import org.drools.marshalling.impl.ProtobufMarshaller;
 import org.jbpm.marshalling.impl.ProcessInstanceMarshaller;
 import org.jbpm.marshalling.impl.ProcessMarshallerRegistry;
 import org.jbpm.process.instance.ProcessInstance;
@@ -80,6 +82,7 @@ class ProcessInstanceInfoDomain implements ProcessInstanceInfo {
                         (InternalRuleBase) ((InternalKnowledgeBase) kruntime.getKnowledgeBase()).getRuleBase(),
                         null,
                         null,
+                        ProtobufMarshaller.TIMER_READERS,
                         this.env
                         );
                 ProcessInstanceMarshaller marshaller = getMarshallerFromContext( context );
@@ -87,6 +90,7 @@ class ProcessInstanceInfoDomain implements ProcessInstanceInfo {
                 processInstance = marshaller.readProcessInstance(context);
                 context.close();
             } catch ( IOException e ) {
+                e.printStackTrace();
                 throw new IllegalStateException( "IOException while loading process instance: ", e );
             }
         }
@@ -111,13 +115,13 @@ class ProcessInstanceInfoDomain implements ProcessInstanceInfo {
 
     def beforeInsert() {
         this.lastModificationDate = new Date()
-        Set updates = env.get(GORM_UPDATE_SET);
+        Set updates = env.get(HasBlob.GORM_UPDATE_SET);
         updates.add(this)
     }
    
     def beforeUpdate() {
         this.lastModificationDate = new Date()
-        Set updates = env.get(GORM_UPDATE_SET);
+        Set updates = env.get(HasBlob.GORM_UPDATE_SET);
         updates.add(this)
     }
    
@@ -131,12 +135,9 @@ class ProcessInstanceInfoDomain implements ProcessInstanceInfo {
                     null,
                     this.env );
             String processType = ((ProcessInstanceImpl) processInstance).getProcess().getType();
-            saveProcessInstanceType( context,
-                    processInstance,
-                    processType );
+            saveProcessInstanceType(context, processInstance, processType);
             ProcessInstanceMarshaller marshaller = ProcessMarshallerRegistry.INSTANCE.getMarshaller( processType );
-            marshaller.writeProcessInstance( context,
-                    processInstance);
+            marshaller.writeProcessInstance(context, processInstance);
             context.close();
         } catch ( IOException e ) {
             throw new IllegalStateException( 

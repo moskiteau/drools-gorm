@@ -19,7 +19,7 @@ import org.jbpm.process.instance.ContextInstance;
 
 public class PersistentDomainTests extends DroolsTestCase {
 
-	static transactional = false
+    static transactional = false
     boolean isOK = true
 	
     public void testSimpleDomainPersistence() {
@@ -36,9 +36,9 @@ public class PersistentDomainTests extends DroolsTestCase {
 			end
 		"""
 		
-		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder()
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder()
         kbuilder.add(ResourceFactory.newByteArrayResource(str.getBytes()),
-                     ResourceType.DRL)
+            ResourceType.DRL)
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase()
 
         if (kbuilder.hasErrors()) {
@@ -50,7 +50,7 @@ public class PersistentDomainTests extends DroolsTestCase {
         Environment env = KnowledgeBaseFactory.newEnvironment()
 
         StatefulKnowledgeSession ksession = 
-        	kstore.newStatefulKnowledgeSession(kbase, null, env)
+        kstore.newStatefulKnowledgeSession(kbase, null, env)
         def sessionId = ksession.id
 
         def fact1 = new DroolsTest(name:"fact1", value:1)
@@ -69,7 +69,7 @@ public class PersistentDomainTests extends DroolsTestCase {
         this.restartDbSession()
         
         ksession = kstore.loadStatefulKnowledgeSession(sessionId, 
-                kbase, null, env)
+            kbase, null, env)
         ksession.fireAllRules()
         
         assertEquals(2, ksession.objects.size())
@@ -106,9 +106,9 @@ public class PersistentDomainTests extends DroolsTestCase {
 			end
 		"""
 		
-		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder()
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder()
         kbuilder.add(ResourceFactory.newByteArrayResource(str.getBytes()),
-                     ResourceType.DRL)
+            ResourceType.DRL)
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase()
 
         if (kbuilder.hasErrors()) {
@@ -120,7 +120,8 @@ public class PersistentDomainTests extends DroolsTestCase {
         Environment env = KnowledgeBaseFactory.newEnvironment()
 
         StatefulKnowledgeSession ksession = 
-        	kstore.newStatefulKnowledgeSession(kbase, null, env)
+        kstore.newStatefulKnowledgeSession(kbase, null, env)
+        
         def sessionId = ksession.id
 
         def fact1 = new DroolsTest(name:"fact3", value:1)
@@ -143,7 +144,7 @@ public class PersistentDomainTests extends DroolsTestCase {
         assertEquals(1, fact1A.value)														
         ksession.fireAllRules()
         assertEquals(1, ksession.objects.size())
-//        fact1A = new ArrayList(ksession.getObjects()).get(0)
+        //        fact1A = new ArrayList(ksession.getObjects()).get(0)
         assertEquals(2, fact1A.value)
         
         // rule2 will not fire because we didn't notify the session about the update
@@ -153,9 +154,9 @@ public class PersistentDomainTests extends DroolsTestCase {
         
         // notify the session about the update and rule2 will fire
         //FIXME when Drools 5.3.0 is released. 
-//        ksession.update(fact1Handle, fact1A)
-//        ksession.fireAllRules()
-//        assertEquals(4, fact1A.value)
+        //        ksession.update(fact1Handle, fact1A)
+        //        ksession.fireAllRules()
+        //        assertEquals(4, fact1A.value)
         
         ksession.dispose()
     }
@@ -174,9 +175,9 @@ public class PersistentDomainTests extends DroolsTestCase {
 			end
 		"""
 		
-		KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder()
+        KnowledgeBuilder kbuilder = KnowledgeBuilderFactory.newKnowledgeBuilder()
         kbuilder.add(ResourceFactory.newByteArrayResource(str.getBytes()),
-                     ResourceType.DRL)
+            ResourceType.DRL)
         KnowledgeBase kbase = KnowledgeBaseFactory.newKnowledgeBase()
 
         if (kbuilder.hasErrors()) {
@@ -191,13 +192,13 @@ public class PersistentDomainTests extends DroolsTestCase {
         def fact1Id = null
         def fact1Handle = null
         DroolsTest.withTransaction { status ->
-        	ksession = 
-        		kstore.newStatefulKnowledgeSession(kbase, null, env)
+            ksession = 
+            kstore.newStatefulKnowledgeSession(kbase, null, env)
 
-	        def fact1 = new DroolsTest(name:"fact4", value:1)
-	        fact1.save(flush:true)
-	        fact1Id = fact1.id
-	        fact1Handle = ksession.insert(fact1)
+            def fact1 = new DroolsTest(name:"fact4", value:1)
+            fact1.save(flush:true)
+            fact1Id = fact1.id
+            fact1Handle = ksession.insert(fact1)
         }	        
     	def sessionId = ksession.id
         
@@ -206,11 +207,11 @@ public class PersistentDomainTests extends DroolsTestCase {
     	def fact2Id = null
         def fact2Handle = null
         DroolsTest.withTransaction {status ->
-        	def fact2 = new DroolsTest(name:"fact5", value:1)
-	        fact2.save()  // without flush
-	        fact2Id = fact2.id
-	        fact2Handle = ksession.insert(fact2)
-	        status.setRollbackOnly()
+            def fact2 = new DroolsTest(name:"fact5", value:1)
+            fact2.save()  // without flush
+            fact2Id = fact2.id
+            fact2Handle = ksession.insert(fact2)
+            status.setRollbackOnly()
         }
 	        
     	assertEquals(1, ksession.objects.size())
@@ -228,19 +229,19 @@ public class PersistentDomainTests extends DroolsTestCase {
         def num_domains = DroolsTest.list().size()
        	
         DroolsTest.withTransaction {status ->
-	        def fact2A = new DroolsTest(name:"fact5", value:1)
-	        fact2A.save()
-	        fact2Id = fact2A.id
-	        fact2Handle = ksession.insert(fact2A)
+            def fact2A = new DroolsTest(name:"fact5", value:1)
+            fact2A.save()
+            fact2Id = fact2A.id
+            fact2Handle = ksession.insert(fact2A)
 
-	        assertEquals(2, ksession.objects.size())
+            assertEquals(2, ksession.objects.size())
 	        
-	        ksession.fireAllRules()
+            ksession.fireAllRules()
         	
-	        assertEquals(2, fact1A.value)
-	        assertEquals(2, fact2A.value)
+            assertEquals(2, fact1A.value)
+            assertEquals(2, fact2A.value)
 	        
-        	status.setRollbackOnly()
+            status.setRollbackOnly()
     	}
         
     	assertEquals(num_domains, DroolsTest.list().size())
@@ -257,25 +258,25 @@ public class PersistentDomainTests extends DroolsTestCase {
     }
 
     public void testPersistenceVariables() {
-		def (kbase, ksession, id, env) = this.setupKSession(["DomainVariablesProcess.rf"])
-		def handler = this.registerWorkItemHandler(ksession)
+        def (kbase, ksession, id, env) = this.setupKSession(["DomainVariablesProcess.rf"])
+        def handler = this.registerWorkItemHandler(ksession)
         
         Map<String, Object> parameters = new HashMap<String, Object>()
         
         def var1 = new DroolsTest(name:"var1", value:1)
-		var1.save()
+        var1.save()
         def var1Id = var1.id
 		
         parameters.put("name", var1)
         
         ksession.addEventListener( new ProcessEventListenerAdapter() {
-            @Override
-            public void afterProcessStarted(ProcessStartedEvent event) {
-                PersistentDomainTests.this.isOK = event.getProcessInstance()
+                @Override
+                public void afterProcessStarted(ProcessStartedEvent event) {
+                    PersistentDomainTests.this.isOK = event.getProcessInstance()
                     .getContextInstance(VariableScope.VARIABLE_SCOPE)
-                        .getVariable("name").equals(DroolsTest.get(var1Id))
-            }
-        })
+                    .getVariable("name").equals(DroolsTest.get(var1Id))
+                }
+            })
         
         assertTrue(isOK)
         
@@ -304,19 +305,19 @@ public class PersistentDomainTests extends DroolsTestCase {
         
         ksession = kstore.loadStatefulKnowledgeSession( id, kbase, null, env )
         ksession.addEventListener( new ProcessEventListenerAdapter() {
-            @Override
-            public void afterProcessCompleted(org.drools.event.process.ProcessCompletedEvent event) {
-                PersistentDomainTests.this.isOK = event.getProcessInstance()
+                @Override
+                public void afterProcessCompleted(org.drools.event.process.ProcessCompletedEvent event) {
+                    PersistentDomainTests.this.isOK = event.getProcessInstance()
                     .getContextInstance(VariableScope.VARIABLE_SCOPE)
-                        .getVariable("name").equals(DroolsTest.get(var1Id))
-            }
-        })
+                    .getVariable("name").equals(DroolsTest.get(var1Id))
+                }
+            })
         
         processInstance = ksession.getProcessInstance( processInstanceId )
 
         handler = this.registerWorkItemHandler(ksession)
 
-//        assertEquals(processInstance.getContextInstance(VariableScope.VARIABLE_SCOPE).getVariable("name"), DroolsTest.get(var1Id))
+        //        assertEquals(processInstance.getContextInstance(VariableScope.VARIABLE_SCOPE).getVariable("name"), DroolsTest.get(var1Id))
         
         ksession.getWorkItemManager().completeWorkItem( workItemId, null )
         workItem = handler.getWorkItem()
@@ -355,8 +356,8 @@ public class PersistentDomainTests extends DroolsTestCase {
     }
 
     public void testAbortWorkItem() {
-		def (kbase, ksession, id, env) = this.setupKSession(["DomainVariablesProcess.rf"])
-		def handler = this.registerWorkItemHandler(ksession)
+        def (kbase, ksession, id, env) = this.setupKSession(["DomainVariablesProcess.rf"])
+        def handler = this.registerWorkItemHandler(ksession)
 
         ProcessInstance processInstance = ksession.startProcess( "org.drools.test.TestProcess")
         def processInstanceId = processInstance.id
