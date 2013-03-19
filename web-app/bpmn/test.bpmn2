@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions id="Definition"
+             targetNamespace="http://www.omg.org/bpmn20"
+             typeLanguage="http://www.java.com/javaTypes"
+             expressionLanguage="http://www.mvel.org/2.0"
+             xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd"
+             xmlns:g="http://www.jboss.org/drools/flow/gpd"
+             xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+             xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+             xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+             xmlns:tns="http://www.jboss.org/drools">
+                 
+    
+    <process id="com.bauna.droolsjbpm.gorm.test" isClosed="false" isExecutable="true" name="Test Process" processType="Private">
+        
+        <startEvent id="_1" isInterrupting="true" name="Start" parallelMultiple="true"/>
+
+        <scriptTask id="_2"  name="Begin">
+            <script><![CDATA[
+            System.out.println("begenning job...");
+          ]]></script>
+        </scriptTask>
+        
+        <scriptTask id="_3"  name="Middle">
+            <script><![CDATA[
+            System.out.println("in the middle of the workflow...");
+          ]]></script>
+        </scriptTask>
+        
+        <scriptTask id="_4" name="Done">
+            <script><![CDATA[
+                System.out.println("Done job " + ".");
+            ]]>
+            </script>
+        </scriptTask>
+
+        <endEvent id="_5" name="End">
+            <terminateEventDefinition/>
+        </endEvent>
+    
+        <sequenceFlow id="_1-_2" sourceRef="_1" targetRef="_2"/>
+        <sequenceFlow id="_2-_3" sourceRef="_2" targetRef="_3"/>
+        <sequenceFlow id="_3-_4" sourceRef="_3" targetRef="_4"/>
+        <sequenceFlow id="_4-_5" sourceRef="_4" targetRef="_5"/>
+
+    </process>
+</definitions>
