@@ -123,7 +123,7 @@ class TestingController {
 
         kbase.addKnowledgePackages(kbuilder.getKnowledgePackages())
         Environment env = KnowledgeBaseFactory.newEnvironment()
-        StatefulKnowledgeSession ksession = kstore.newStatefulKnowledgeSession(kbase, null, env)
+        StatefulKnowledgeSession ksession = kstore.newStatefulKnowledgeSession(kbase, getGORMSessionConfig(), env)
         def sessionId = ksession.id
         println "created session $sessionId"
         
@@ -136,8 +136,8 @@ class TestingController {
         println "created process instance: $pi"
         
         //ksession.startProcess("com.bauna.droolsjbpm.gorm.test", null)
-        //ksession.startProcessInstance(pi.id)
-        pi.start();
+        ksession.startProcessInstance(pi.id)
+        //pi.start();
         
         if(ksession) {
             ksession.dispose()

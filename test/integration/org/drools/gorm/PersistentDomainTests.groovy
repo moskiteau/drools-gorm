@@ -292,7 +292,12 @@ public class PersistentDomainTests extends DroolsTestCase {
 
         this.restartDbSession()
         isOK = false
-        ksession = kstore.loadStatefulKnowledgeSession( id, kbase, null, env )
+        
+        env = KnowledgeBaseFactory.newEnvironment()
+        ksession = kstore.loadStatefulKnowledgeSession( id, kbase, getGORMSessionConfig(), env )
+        def instances = ksession.getProcessInstances()
+        println "-> ${instances} ${processInstanceId}"
+        
         processInstance = ksession.getProcessInstance( processInstanceId )
         
         assertNotNull( processInstance )
@@ -303,6 +308,7 @@ public class PersistentDomainTests extends DroolsTestCase {
 
         this.restartDbSession() //----------------------------------------------
         
+        env = KnowledgeBaseFactory.newEnvironment()
         ksession = kstore.loadStatefulKnowledgeSession( id, kbase, null, env )
         ksession.addEventListener( new ProcessEventListenerAdapter() {
                 @Override
@@ -329,6 +335,7 @@ public class PersistentDomainTests extends DroolsTestCase {
 
         this.restartDbSession() //----------------------------------------------
         
+        env = KnowledgeBaseFactory.newEnvironment()
         ksession = kstore.loadStatefulKnowledgeSession( id, kbase, null, env )
         processInstance = ksession.getProcessInstance( processInstanceId )
         assertNotNull( processInstance )
@@ -337,6 +344,7 @@ public class PersistentDomainTests extends DroolsTestCase {
 
         this.restartDbSession() //----------------------------------------------
 
+        env = KnowledgeBaseFactory.newEnvironment()
         ksession = kstore.loadStatefulKnowledgeSession( id, kbase, null, env )
         handler = this.registerWorkItemHandler(ksession)
         
@@ -349,6 +357,7 @@ public class PersistentDomainTests extends DroolsTestCase {
 
         this.restartDbSession() //----------------------------------------------
 
+        env = KnowledgeBaseFactory.newEnvironment()
         ksession = kstore.loadStatefulKnowledgeSession( id, kbase, null, env )
         processInstance = ksession.getProcessInstance( processInstanceId )
         assertNull( processInstance )
@@ -372,6 +381,7 @@ public class PersistentDomainTests extends DroolsTestCase {
 
         ksession = kstore.loadStatefulKnowledgeSession( id, kbase, null, env )
         processInstance = ksession.getProcessInstance( processInstanceId )
+        println "processInstance: $processInstanceId -> $processInstance"
         assertNotNull( processInstance )
 
         ksession.dispose()

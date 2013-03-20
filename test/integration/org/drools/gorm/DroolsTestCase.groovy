@@ -54,7 +54,7 @@ public class DroolsTestCase extends GroovyTestCase {
         
         Environment env = KnowledgeBaseFactory.newEnvironment()
         
-        StatefulKnowledgeSession ksession = kstore.newStatefulKnowledgeSession( kbase, null, env )
+        StatefulKnowledgeSession ksession = kstore.newStatefulKnowledgeSession( kbase, getGORMSessionConfig(), env )
         
         return [kbase, ksession, ksession.id, env]
     }

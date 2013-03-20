@@ -166,7 +166,9 @@ public class GormWorkItemManager implements WorkItemManager, Externalizable {
             System.out.println("signalEvent WorkItem has finished! " + workItem.getName());
             
             workItem.setResults(results);
+            System.out.println("ProcessInstanceId: " + workItem.getProcessInstanceId());
             ProcessInstance processInstance = kruntime.getProcessInstance(workItem.getProcessInstanceId());
+            System.out.println("ProcessInstance: " + processInstance);
             workItem.setState(WorkItem.COMPLETED);
             // process instance may have finished already
             if (processInstance != null) {

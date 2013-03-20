@@ -36,12 +36,14 @@ public class GormProcessInstanceManager implements ProcessInstanceManager {
 
     @Override
     public ProcessInstance getProcessInstance(long id) {
+        System.out.println("GETTING Process instance for " + id);
         org.jbpm.process.instance.ProcessInstance processInstance =
                 (org.jbpm.process.instance.ProcessInstance) processInstances.get(id);
         if (processInstance != null) {
             return processInstance;
         }
 
+        System.out.println("Process instance is not null...");
         ProcessInstanceInfo processInstanceInfo = GrailsIntegration.getGormDomainService().getProcessInstanceInfo(id, this.kruntime.getEnvironment());
         if (processInstanceInfo == null) {
             return null;

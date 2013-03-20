@@ -53,9 +53,9 @@ grails.project.dependency.resolution = {
         runtime 'janino:janino:2.5.15'
 
         if (Environment.current == Environment.DEVELOPMENT) {
-            runtime 'com.h2database:h2:1.2.139'
+            runtime 'com.h2database:h2:1.2.170'
         } else {
-            test 'com.h2database:h2:1.2.139'
+            test 'com.h2database:h2:1.2.170'
         }
         
     }

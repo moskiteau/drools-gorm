@@ -38,6 +38,7 @@ import org.drools.runtime.EnvironmentName;
 import org.drools.runtime.KnowledgeSessionConfiguration;
 import org.drools.runtime.StatefulKnowledgeSession;
 import org.drools.runtime.process.InternalProcessRuntime;
+//import org.drools.persistence.jpa.JpaJDKTimerService;
 import org.drools.time.AcceptsTimerJobFactoryManager;
 
 import org.drools.command.CommandService;
@@ -59,19 +60,17 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 public class SingleSessionCommandService implements org.drools.command.SingleSessionCommandService {
 
+    private final static Map<Class<?>, String> entitiesTablenames = new ConcurrentHashMap<Class<?>, String>();
+    
     private SessionInfo sessionInfo;
     private GormSessionMarshallingHelper marshallingHelper;
+    
     private StatefulKnowledgeSession ksession;
     private Environment env;
     private KnowledgeCommandContext kContext;
-    private CommandService commandService;
-//    private TransactionManager txm;
-//    private PersistenceContextManager jpm;
-    private volatile boolean doRollback;
-    private final static Map<Class<?>, String> entitiesTablenames = new ConcurrentHashMap<Class<?>, String>();
-    private static Map<Object, Object> synchronizations = Collections.synchronizedMap(new IdentityHashMap<Object, Object>());
-    public static Map<Object, Object> txManagerClasses = Collections.synchronizedMap(new IdentityHashMap<Object, Object>());
-
+    private CommandService commandService;    
+    private volatile boolean doRollback;    
+    
     public void checkEnvironment(Environment env) {
         configureEnvironment();
     }
@@ -104,8 +103,8 @@ public class SingleSessionCommandService implements org.drools.command.SingleSes
 
         if (conf == null) {
             conf = new SessionConfiguration();
-            configureEnvironment();
         }
+        
         this.env = env;
         checkEnvironment(this.env);
 
@@ -114,7 +113,6 @@ public class SingleSessionCommandService implements org.drools.command.SingleSes
         // create session but bypass command service
         this.ksession = kbase.newStatefulKnowledgeSession(conf, this.env);
 
-        //ContextImpl ctxImpl = new ContextImpl("ksession", null);
         this.kContext = new FixedKnowledgeCommandContext(
                 null,
                 null,
@@ -122,13 +120,13 @@ public class SingleSessionCommandService implements org.drools.command.SingleSes
                 this.ksession,
                 null);
 
-        ((AcceptsTimerJobFactoryManager) ((InternalKnowledgeRuntime) ksession).getTimerService()).getTimerJobFactoryManager().setCommandService(this);
-
+        //((JpaJDKTimerService) ((InternalKnowledgeRuntime) ksession).getTimerService()).getTimerJobFactoryManager().setCommandService(this);
+        ((AcceptsTimerJobFactoryManager) ((InternalKnowledgeRuntime) ksession).getTimerService()).getTimerJobFactoryManager().setCommandService( this );
         this.marshallingHelper = new GormSessionMarshallingHelper(this.ksession, conf);
 
-        MarshallingConfigurationImpl config = (MarshallingConfigurationImpl) this.marshallingHelper.getMarshaller().getMarshallingConfiguration();
-        config.setMarshallProcessInstances(false);
-        config.setMarshallWorkItems(false);
+        //MarshallingConfigurationImpl config = (MarshallingConfigurationImpl) this.marshallingHelper.getMarshaller().getMarshallingConfiguration();
+        //config.setMarshallProcessInstances(false);
+        //config.setMarshallWorkItems(false);
 
         this.sessionInfo.setMarshallingHelper(this.marshallingHelper);
         ((InternalKnowledgeRuntime) this.ksession).setEndOperationListener(new EndOperationListenerImpl(this.sessionInfo));
@@ -153,7 +151,6 @@ public class SingleSessionCommandService implements org.drools.command.SingleSes
         }
 
         // update the session id to be the same as the session info id
-        System.out.println("setting sessionId: " + this.sessionInfo.getId());
         ((InternalKnowledgeRuntime) ksession).setId(this.sessionInfo.getId());
 
     }
@@ -197,9 +194,9 @@ public class SingleSessionCommandService implements org.drools.command.SingleSes
         if (this.marshallingHelper == null) {
             // this should only happen when this class is first constructed
             this.marshallingHelper = new GormSessionMarshallingHelper(kbase, conf, env);
-            MarshallingConfigurationImpl config = (MarshallingConfigurationImpl) this.marshallingHelper.getMarshaller().getMarshallingConfiguration();
-            config.setMarshallProcessInstances(false);
-            config.setMarshallWorkItems(false);
+//            MarshallingConfigurationImpl config = (MarshallingConfigurationImpl) this.marshallingHelper.getMarshaller().getMarshallingConfiguration();
+//            config.setMarshallProcessInstances(false);
+//            config.setMarshallWorkItems(false);
         }
 
         this.sessionInfo.setMarshallingHelper(this.marshallingHelper);
